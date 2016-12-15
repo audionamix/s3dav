@@ -1,0 +1,10 @@
+version: '2'
+services:
+  dav:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./src:/var/www/html/server
+    ports:
+      - "8080:80"
