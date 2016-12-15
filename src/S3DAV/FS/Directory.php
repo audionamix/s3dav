@@ -56,7 +56,7 @@ class S3Directory extends DAV\Collection {
       if (isset($object['Prefix'])) {
         $children[] = new S3Directory($object['Prefix'], $this->bucket, $this->client);
       } else {
-        $children[] = new S3File($object['Key']);
+        $children[] = new S3File($object['Key'], $this->bucket, $this->client);
       }
     }
 
@@ -64,30 +64,26 @@ class S3Directory extends DAV\Collection {
   }
 
   function getChild($name) {
-    $path = $name . '/';
+    $path = $name;
     if (!empty($this->path)) {
-      $path = $this->path . $name . '/';
+      $path = $this->path . $name;
     }
 
     if ($this->isDirectory($name)) {
-      return new S3Directory($path, $this->bucket, $this->client);
+      return new S3Directory($path . '/', $this->bucket, $this->client);
     }
     if ($this->isRegularFile($name)) {
-      return new S3File($path);
+      return new S3File($path, $this->bucket, $this->client);
     }
     throw new DAV\Exception\NotFound('The file with name: ' . $name . ' could not be found');
   }
 
   function childExists($name) {
-
-        return file_exists($this->myPath . '/' . $name);
-
+    return $this->isDirectory($name) || $this->isRegularFile($name);
   }
 
   function getName() {
-
-      return basename($this->path);
-
+    return basename($this->path);
   }
 
 }

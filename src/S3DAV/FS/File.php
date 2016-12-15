@@ -2,36 +2,34 @@
 
 class S3File extends Sabre\DAV\File {
 
-  private $myPath;
+  private $path;
+  private $bucket;
+  private $client;
 
-  function __construct($myPath) {
-
-    $this->myPath = $myPath;
-
+  function __construct($path, $bucket, $client) {
+    $this->path = $path;
+    $this->bucket = $bucket;
+    $this->client = $client;
   }
 
   function getName() {
-
-    return basename($this->myPath);
-
+    return basename($this->path);
   }
 
   function get() {
-
-    return fopen($this->myPath,'r');
-
+    $result = $this->client->getObject(array(
+      'Bucket' => $this->bucket,
+      'Key'    => $this->path,
+    ));
+    return (string) $result['Body'];
   }
 
   function getSize() {
-
-    return filesize($this->myPath);
-
+    return filesize($this->path);
   }
 
   function getETag() {
-
-    return '"' . md5_file($this->myPath) . '"';
-
+    return '"' . md5_file($this->path) . '"';
   }
 
 }
