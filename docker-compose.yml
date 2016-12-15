@@ -8,3 +8,12 @@ services:
       - ./src:/var/www/html/server
     ports:
       - "8080:80"
+      
+  davacl:
+    build:
+      context: .
+      dockerfile: Dockerfile_acl
+    volumes:
+      - ./src:/var/www/html/server
+    ports:
+      - "8181:80"
