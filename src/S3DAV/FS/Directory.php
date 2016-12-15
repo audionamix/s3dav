@@ -49,6 +49,12 @@ class S3Directory extends DAV\Collection {
     return false;
   }
 
+  function createFile($name, $data = null) {
+      $newPath = $this->path . $name;
+      $newFile = new S3File($newPath, $this->bucket, $this->client);
+      $newFile->put($data);
+  }
+
   function createDirectory($name) {
     $path = $this->path . $name . '/';
     $this->client->putObject(array(
@@ -59,10 +65,18 @@ class S3Directory extends DAV\Collection {
   }
 
   function delete() {
-    $this->client->deleteObject(array(
-        'Bucket' => $this->bucket,
-        'Key' => $this->path,
-    ));
+    foreach ($this->objects as $object) {
+      $nodePath = "";
+      if (isset($object['Prefix'])) {
+        $nodePath = $object['Prefix'];
+      } else {
+        $nodePath = $object['Key'];
+      }
+      $this->client->deleteObject(array(
+          'Bucket' => $this->bucket,
+          'Key' => $nodePath,
+      ));
+    }
   }
 
   function getChildren() {

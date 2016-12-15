@@ -32,6 +32,20 @@ class S3File extends Sabre\DAV\File {
     return '"' . md5_file($this->path) . '"';
   }
 
+  function put($data) {
+    $this->client->putObject(array(
+        'Bucket' => $this->bucket,
+        'Key' => $this->path,
+        'Body' => $data,
+    ));
+  }
+
+  function delete() {
+    $this->client->deleteObject(array(
+        'Bucket' => $this->bucket,
+        'Key' => $this->path,
+    ));
+  }
 }
 
  ?>
