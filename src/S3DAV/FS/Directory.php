@@ -49,6 +49,22 @@ class S3Directory extends DAV\Collection {
     return false;
   }
 
+  function createDirectory($name) {
+    $path = $this->path . $name . '/';
+    $this->client->putObject(array(
+        'Bucket' => $this->bucket,
+        'Key' => $path,
+        'Body' => '',
+    ));
+  }
+
+  function delete() {
+    $this->client->deleteObject(array(
+        'Bucket' => $this->bucket,
+        'Key' => $this->path,
+    ));
+  }
+
   function getChildren() {
     $children = array();
 
@@ -56,6 +72,9 @@ class S3Directory extends DAV\Collection {
       if (isset($object['Prefix'])) {
         $children[] = new S3Directory($object['Prefix'], $this->bucket, $this->client);
       } else {
+        // we always get one child that is the current path. Don't include it
+        if (strcmp($object['Key'], $this->path) == 0) continue;
+        // others are files
         $children[] = new S3File($object['Key'], $this->bucket, $this->client);
       }
     }
