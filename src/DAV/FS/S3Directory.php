@@ -9,10 +9,10 @@ use Sabre\DAV;
 *
 */
 class S3Directory extends DAV\Collection {
-    private $client;
-    private $bucket;
-    private $path;
-    private $objects;
+    protected $client;
+    protected $bucket;
+    protected $path;
+    protected $objects;
 
     /**
      * Constructor

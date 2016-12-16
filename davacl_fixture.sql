@@ -8,6 +8,10 @@ CREATE TABLE users (
 INSERT INTO users (username,digesta1) VALUES
 ('admin',  '87fd274b7b6c01e48d7c2f965da8ddf7');
 
+INSERT INTO users (username,digesta1) VALUES
+('user',  'c2d2a53c9a5a139768f3c97196e3c2ff');
+
+
 CREATE TABLE principals (
     id INTEGER PRIMARY KEY ASC NOT NULL,
     uri TEXT NOT NULL,
@@ -23,7 +27,7 @@ CREATE TABLE groupmembers (
     UNIQUE(principal_id, member_id)
 );
 
-
 INSERT INTO principals (uri,email,displayname) VALUES ('principals/admin', 'admin@example.org','Administrator');
+INSERT INTO principals (uri,email,displayname) VALUES ('principals/user', 'user@example.org','User');
 INSERT INTO principals (uri,email,displayname) VALUES ('principals/admin/calendar-proxy-read', null, null);
 INSERT INTO principals (uri,email,displayname) VALUES ('principals/admin/calendar-proxy-write', null, null);

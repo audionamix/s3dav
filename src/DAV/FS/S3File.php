@@ -10,9 +10,9 @@ use Sabre\DAV;
  */
 class S3File extends DAV\File {
 
-    private $path;
-    private $bucket;
-    private $client;
+    protected $path;
+    protected $bucket;
+    protected $client;
 
     /**
      * Constructor
